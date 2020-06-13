@@ -1,23 +1,23 @@
 /*
  * Copyright 2010-2020 Gildas Lormeau
  * contact : gildas.lormeau <at> gmail.com
- * 
+ *
  * This file is part of SingleFile.
  *
- *   The code in this file is free software: you can redistribute it and/or 
- *   modify it under the terms of the GNU Affero General Public License 
+ *   The code in this file is free software: you can redistribute it and/or
+ *   modify it under the terms of the GNU Affero General Public License
  *   (GNU AGPL) as published by the Free Software Foundation, either version 3
  *   of the License, or (at your option) any later version.
- * 
- *   The code in this file is distributed in the hope that it will be useful, 
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of 
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero 
+ *
+ *   The code in this file is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero
  *   General Public License for more details.
  *
- *   As additional permission under GNU AGPL version 3 section 7, you may 
- *   distribute UNMODIFIED VERSIONS OF THIS file without the copy of the GNU 
- *   AGPL normally required by section 4, provided you include this license 
- *   notice and a URL through which recipients can access the Corresponding 
+ *   As additional permission under GNU AGPL version 3 section 7, you may
+ *   distribute UNMODIFIED VERSIONS OF THIS file without the copy of the GNU
+ *   AGPL normally required by section 4, provided you include this license
+ *   notice and a URL through which recipients can access the Corresponding
  *   Source.
  */
 
@@ -83,9 +83,19 @@ this.singlefile.extension.core.content.main = this.singlefile.extension.core.con
 				try {
 					const pageData = await processPage(options);
 					if (pageData) {
-						if (((!options.backgroundSave && !options.saveToClipboard) || options.saveToGDrive) && options.confirmFilename) {
-							pageData.filename = ui.prompt("Save as", pageData.filename) || pageData.filename;
-						}
+						// ushuz modification
+						const dt = options.saveDate.toISOString()
+						const title = options.title || "No Title"
+						const author = options.info.author || ""
+						const netloc = new URL(options.saveUrl).hostname
+						const url = new URL(options.saveUrl).href
+						const filename = `${netloc.split(".").join("_")}-${options.saveDate.getTime()}.html`
+						const tags = ui.prompt("Tags?", "").split(",")
+						pageData.content += `\n<!-- ${JSON.stringify({dt, title, author, netloc, url, filename, tags})} -->`
+						pageData.filename = filename
+						// if (((!options.backgroundSave && !options.saveToClipboard) || options.saveToGDrive) && options.confirmFilename) {
+						// 	pageData.filename = ui.prompt("Save as", pageData.filename) || pageData.filename;
+						// }
 						await singlefile.extension.core.content.download.downloadPage(pageData, options);
 					}
 				} catch (error) {
