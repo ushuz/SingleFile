@@ -89,9 +89,8 @@ this.singlefile.extension.core.content.main = this.singlefile.extension.core.con
 						const author = options.info.author || ""
 						const netloc = new URL(options.saveUrl).hostname
 						const url = new URL(options.saveUrl).href
-						const filename = `${netloc.split(".").join("_")}-${options.saveDate.getTime()}.html`
-						const tags = ui.prompt("Tags?", "").split(",")
-						pageData.content += `\n<!-- ${JSON.stringify({dt, title, author, netloc, url, filename, tags})} -->`
+						const filename = `${options.saveDate.getTime()}-${netloc.split(".").join("_")}.html`
+						pageData.content += `\n<!-- ${JSON.stringify({dt, title, author, netloc, url, filename})} -->`
 						pageData.filename = filename
 						// if (((!options.backgroundSave && !options.saveToClipboard) || options.saveToGDrive) && options.confirmFilename) {
 						// 	pageData.filename = ui.prompt("Save as", pageData.filename) || pageData.filename;
